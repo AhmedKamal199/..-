@@ -1,23 +1,49 @@
-import logo from './logo.svg';
-import './App.css';
+import Header from './components/Header'
+import Cards from './components/Cards'
+import { useState, useEffect } from 'react'
+import AddCard from './components/AddCard'
 
 function App() {
+  const [cards, setCards] = useState([])
+
+  const deleteCard = async (id) =>{
+    await fetch(`http://localhost:5000/cards/${id}`, {
+      method:'DELETE',
+    })
+    console.log(id)
+    setCards(cards.filter((card)=> card.id !== id))
+  }
+
+  useEffect(()=> {
+    const getCards = async () =>{
+      const cardsFromServer = await fetchCards()
+      setCards(cardsFromServer)
+    }
+    getCards()
+}, [])
+  const fetchCards = async () =>{
+    const res = await fetch('http://localhost:5000/cards')
+    const data = await res.json()
+    return data
+  }
+
+  const [showAdd,setShow] = useState(false)
+
+  const Addcard = (card) =>{
+    const NewCard = {...card}
+    setCards([...cards, NewCard])
+    
+  }
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <Header onAdd={()=>setShow(!showAdd)} showAdd={showAdd}/>
+      {showAdd && <AddCard onAdd={Addcard}/> }
+      { cards.length > 0 ? 
+      (<Cards cards={cards} onDelete={deleteCard}/>)
+    :(
+      'Now Cards to show')
+    }
     </div>
   );
 }
