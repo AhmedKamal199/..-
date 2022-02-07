@@ -34,7 +34,7 @@ function App() {
     setCards([...cards, NewCard])
     
   }
-
+  console.clear();
   return (
     <div className="App">
       <Header onAdd={()=>setShow(!showAdd)} showAdd={showAdd}/>
@@ -42,7 +42,7 @@ function App() {
       { cards.length > 0 ? 
       (<Cards cards={cards} onDelete={deleteCard}/>)
     :(
-      'Now Cards to show')
+      'No Cards to show')
     }
     </div>
   );

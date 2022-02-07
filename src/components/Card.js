@@ -2,9 +2,8 @@ import {FaTimes} from 'react-icons/fa'
 
 
 const Card = ({card, onDelete}) => {
-  var frame = 'weekly'
-  var current = card.timeframes[frame].current
-  var previous = card.timeframes[frame].previous
+
+  var frame = 'daily'
 
   return (
     <div className="up card study bg-darkblue">
@@ -13,9 +12,9 @@ const Card = ({card, onDelete}) => {
         <div className='pos'>
         <FaTimes  style={{color:'red', cursor:'pointer'}} onClick={() => onDelete(card.id)} />
         </div>
-        <h1 className="current">{current}hrs</h1>
-        <h6 className="previous-t">last week &nbsp; &nbsp; 
-        <span className="previous p">{previous}hrs</span>
+        <h1 className="current">{card.timeframes[frame].current}hrs</h1>
+        <h6 className="previous-t d-wh">last week &nbsp; &nbsp; 
+        <span className="previous d-wh">{card.timeframes[frame].previous}hrs</span>
         </h6>
       </div>
   )
