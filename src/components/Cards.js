@@ -1,20 +1,8 @@
+import { useState } from 'react';
 import Card from './Card'
 
 const Cards = ({cards,onDelete}) => {
-  const sels = document.querySelectorAll('.selector ul li');
-  sels.forEach((sel)=>{
-    sel.addEventListener('click', ()=>{
-      removeAll()
-      sel.classList.add('active')
-      console.log(sel.textContent)
-    });
-  });
-
-  function removeAll(){
-    sels.forEach((sel)=>{
-      sel.classList.remove('active')
-    })
-  }
+  const [frame,setFrame] = useState("weekly")
 
   return (
     <div className="container">
@@ -26,21 +14,21 @@ const Cards = ({cards,onDelete}) => {
       </div> 
       <div className="selector">
         <ul className="list-style">
-        <li className='d-wh'>daily</li>
-        <li className='d-wh active'>weekly</li>
-        <li className='d-wh'>monthly</li>
+        <li  onClick={(e) => setFrame("daily")} className={`d-wh ${frame === "daily" ? "active" : ""}`}>Daily</li>
+        <li onClick={(e) => setFrame("weekly")}  className={`d-wh ${frame === "weekly" ? "active" : ""}`}>Weekly</li>
+        <li onClick={(e) => setFrame("monthly")}  className={`d-wh ${frame === "monthly" ? "active" : ""}`}>Monthly</li>
       </ul>
       </div>
     </div>   
     <div className='cards up'>
     {cards.map((card,id) =>(
-      id < 3 && <Card  key={id} card={card} 
+      id < 3 && <Card frame={frame} key={id} card={card} 
       onDelete={onDelete} /> 
     ))}
     </div>
     <div className='cards down'>
     {cards.map((card,id) =>(
-      id >= 3 && <Card key={id} card={card} 
+      id >= 3 && <Card frame={frame} key={id} card={card} 
       onDelete={onDelete} /> 
     ))}
     </div>

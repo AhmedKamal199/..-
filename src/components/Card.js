@@ -1,9 +1,8 @@
 import {FaTimes} from 'react-icons/fa'
 
-
-const Card = ({card, onDelete}) => {
-
-  var frame = 'daily'
+const Card = ({card, onDelete, frame}) => {
+  
+  console.log(card, frame)
 
   return (
     <div className="up card study bg-darkblue">
