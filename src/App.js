@@ -1,51 +1,59 @@
-import Header from './components/Header'
-import Cards from './components/Cards'
-import { useState, useEffect } from 'react'
-import AddCard from './components/AddCard'
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import Header from "./components/Header";
 
-function App() {
-  const [cards, setCards] = useState([])
+const App = () => {
+  const [Error,setError] = useState('')
+  const [users, setUsers] = useState([]);
+  const [username, setName] = useState();
+  const [password ,setPass ] = useState();
+  useEffect(async () => {
+    const users = await axios.get("http://localhost:8000/");
+    //console.log(users);
+    setUsers(users.data);
+  }, []);
+  const _onSubmit = async(e) => {
 
-  const deleteCard = async (id) =>{
-    await fetch(`http://localhost:5000/cards/${id}`, {
-      method:'DELETE',
-    })
-    console.log(id)
-    setCards(cards.filter((card)=> card.id !== id))
-  }
+     // console.log(e)
+     var response = []
+    await axios.post("http://localhost:8000/", {
+          username,
+          password
+      })
+      .then(res => {
+          response = res.data
+          console.log(res.data)
+      })
+      .catch(err =>{
+          console.log(err.response.data.msg)
+          setError(err.response.data.msg)
+      })
+    //   console.log(response)
+      
+}
 
-  useEffect(()=> {
-    const getCards = async () =>{
-      const cardsFromServer = await fetchCards()
-      setCards(cardsFromServer)
-    }
-    getCards()
-}, [])
-  const fetchCards = async () =>{
-    const res = await fetch('http://localhost:5000/cards')
-    const data = await res.json()
-    return data
-  }
-
-  const [showAdd,setShow] = useState(false)
-
-  const Addcard = (card) =>{
-    const NewCard = {...card}
-    setCards([...cards, NewCard])
-    
-  }
-  console.clear();
   return (
-    <div className="App">
-      <Header onAdd={()=>setShow(!showAdd)} showAdd={showAdd}/>
-      {showAdd && <AddCard onAdd={Addcard}/> }
-      { cards.length > 0 ? 
-      (<Cards cards={cards} onDelete={deleteCard}/>)
-    :(
-      'No Cards to show')
-    }
+    <div>
+      {/* users */}
+      {users.map((u, i) => (
+        <h1 key={i}>{u.username}</h1>
+      ))}
+      {/* <input /> */}
+
+        <h1>Login</h1>
+        <div className="msg"></div>
+        <div>
+          <label htmlFor="name">Username:</label>
+          <input type="text" id="name" placeholder="Username" onChange={(e)=> setName(e.target.value)} />
+        </div>
+        <div>
+          <label htmlFor="password">Pasword:</label>
+          <input type="password" id="password" placeholder="password" onChange={(e) => setPass(e.target.value)} />
+        </div>
+        <button className="btn" onClick={_onSubmit}>Submit</button>
+        <h1>{Error}</h1>
     </div>
   );
-}
+};
 
 export default App;
